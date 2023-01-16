@@ -12,6 +12,4 @@ export const Layout = () => {
   );
 };
 
-const Container = styled.div`
-  border: 1px solid red;
-`;
+const Container = styled.div``;

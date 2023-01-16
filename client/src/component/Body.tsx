@@ -1,33 +1,33 @@
 import styled from 'styled-components';
-import {Icon} from './Icon';
+import {Sidebar} from './Sidebar';
+import {SearchInput} from './SearchInput';
+import {imgUrl} from '../constant/test';
+import {Channel} from './Channel';
 
 export const Body = () => {
+  const x = [imgUrl, imgUrl];
+  const imgSize = (() => {
+    if ([3, 4].includes(x.length)) {
+      return 20;
+    }
+    return x.length >= 5 ? 40 / 3 : 40;
+  })();
+  console.log('imgSize-----');
+  console.log(imgSize);
   return (
     <Container>
-      <Sidebar>
-        <Gap />
-        <Engage>Engage</Engage>
-        <EngageItems>
-          <li>
-            <IconWrapper>
-              <Icon name="notification" size={1.5} />
-            </IconWrapper>
-            Forum
-          </li>
-          <li>
-            <IconWrapper>
-              <Icon name="chat" size={1.5} />
-            </IconWrapper>
-            Chat
-          </li>
-          <li>
-            <IconWrapper>
-              <Icon name="matches" size={1.5} />
-            </IconWrapper>
-            Matches
-          </li>
-        </EngageItems>
-      </Sidebar>
+      <Sidebar />
+      <Content>
+        <ContentLeft>
+          <StyledInput iconSize={2} />
+          <Channels>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => {
+              return <Channel id={id} />;
+            })}
+          </Channels>
+        </ContentLeft>
+        <ContentRight></ContentRight>
+      </Content>
     </Container>
   );
 };
@@ -35,48 +35,34 @@ export const Body = () => {
 const Container = styled.div`
   width: var(--mt-chat-width);
   height: 846px;
-`;
-
-const Gap = styled.div`
-  background: transparent;
-  height: 60px;
-`;
-
-const Engage = styled.p`
-  color: #797b85;
-  font-weight: 500;
-  font-size: 14px;
-  margin-bottom: 30px;
-`;
-
-const Sidebar = styled.div`
-  width: 225px;
-  background: var(--mt-chat-black-color);
-  padding-left: 30px;
-  height: 100%;
-`;
-
-const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 50%;
-  background: #26252d;
-`;
-
-const EngageItems = styled.ul`
   display: grid;
-  gap: 30px;
-  li {
-    display: grid;
-    align-items: center;
-    grid-template-columns: 40px 1fr;
-    gap: var(--mt-spacing-2x);
-    font-weight: 500;
-    font-size: 18px;
-    color: #929699;
+  grid-template-columns: 225px 1fr;
+`;
+
+const Content = styled.div`
+  display: grid;
+  grid-template-columns: 340px 1fr;
+`;
+
+const ContentLeft = styled.div`
+  background: var(--mt-chat-background-black-color);
+`;
+
+const ContentRight = styled.div``;
+
+const StyledInput = styled(SearchInput)`
+  width: 100%;
+  height: 64px;
+  border-radius: 0;
+  font-weight: var(--mt-font-weight-medium);
+  font-size: var(--mt-spacing-2x);
+  background: var(--mt-chat-background-black-color);
+  color: #7b798f;
+  border-bottom: 2px solid rgb(39, 38, 42);
+  padding: 20px;
+  input {
+    margin-left: 12px;
   }
 `;
+
+const Channels = styled.div``;

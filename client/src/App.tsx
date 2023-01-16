@@ -2,6 +2,7 @@ import React, {FC, useEffect} from 'react';
 
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {Home} from './Home';
+import {Layout} from './component/Layout';
 
 const getData = async () => {
   return await fetch('http://localhost:8000/graphql', {
@@ -31,7 +32,29 @@ const router = createBrowserRouter([
   },
   {
     path: '/forum',
-    element: <div>forum</div>,
+    element: <Layout />,
+  },
+  {
+    path: '/chat',
+    element: <Layout />,
+    children: [
+      {
+        path: '/chat/chanel/:id',
+        element: <div>xxxxxz</div>,
+      },
+    ],
+  },
+  {
+    path: '/matches',
+    element: <div>matches</div>,
+  },
+  {
+    path: '/members',
+    element: <Layout />,
+  },
+  {
+    path: '/contributors',
+    element: <div>contributors</div>,
   },
 ]);
 const App: FC = () => {

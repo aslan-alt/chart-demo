@@ -4,9 +4,13 @@
     --mt-spacing-2x: 16px;
     --mt-spacing-3x: 24px;
     --mt-spacing-4x: 32px;
+    --mt-font-weight-small:400;
+    --mt-font-weight-medium:500;
+    --mt-font-weight-large:600;
     --mt-chat-width:1440px;
     --mt-chat-m-font-size:14px;
     --mt-chat-black-color:rgb(11,12,16);
+    --mt-chat-background-black-color:#1d1c21;
     --font-hei: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 
 }

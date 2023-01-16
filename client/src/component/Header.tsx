@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {Icon} from './Icon';
+import {SearchInput} from './SearchInput';
 
 export const Header = () => {
   return (
@@ -11,10 +12,7 @@ export const Header = () => {
         />
       </LeftWrapper>
       <RightWrapper>
-        <InputWrapper>
-          <Icon name="search_light" size={1.5} />
-          <Input placeholder="Search" />
-        </InputWrapper>
+        <SearchInput />
         <Time>
           <Icon name="time" size={1.5} />
           <p>UTC -05:00 Chicago</p>
@@ -42,26 +40,6 @@ const LeftWrapper = styled.div`
 
 const Log = styled.img`
   width: 120px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  background: transparent;
-  border: none;
-  margin-left: 6px;
-  color: #929699;
-  font-size: var(--mt-chat-m-font-size);
-  font-weight: 600;
-`;
-
-const InputWrapper = styled.label`
-  display: flex;
-  align-items: center;
-  width: 143px;
-  height: 38px;
-  background: rgb(19, 20, 24);
-  border-radius: 10px;
-  padding: 12px;
 `;
 
 const RightWrapper = styled.div`
