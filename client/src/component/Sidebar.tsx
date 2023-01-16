@@ -1,29 +1,53 @@
 import {NavItem} from './NavItem';
 import styled from 'styled-components';
+import {Log} from './Log';
+import {LOG_URL_WHITE} from '../constant/imgUrl';
 
 export const Sidebar = () => {
   return (
     <Container>
-      <Gap />
-      <Engage>Engage</Engage>
-      <NaveItems>
-        <NavItem path="forum" />
-        <NavItem path="chat" />
-        <NavItem path="matches" />
-      </NaveItems>
-      <Divider />
-      <People>People</People>
-      <NaveItems>
-        <NavItem path="members" />
-        <NavItem path="contributors" />
-      </NaveItems>
+      <NavWrapper>
+        <Gap />
+        <Engage>Engage</Engage>
+        <NaveItems>
+          <NavItem path="forum" />
+          <NavItem path="chat" />
+          <NavItem path="matches" />
+        </NaveItems>
+        <Divider />
+        <People>People</People>
+        <NaveItems>
+          <NavItem path="members" />
+          <NavItem path="contributors" />
+        </NaveItems>
+      </NavWrapper>
+      <LogWrapper>
+        <Log width={90} url={LOG_URL_WHITE} />
+      </LogWrapper>
     </Container>
   );
 };
 
+const NavWrapper = styled.div`
+  flex-grow: 1;
+`;
+
+const LogWrapper = styled.div`
+  width: 120px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+`;
+
 const Container = styled.div`
   background: var(--mt-chat-black-color);
-  padding: 0 30px 0 30px;
+  padding: 0 30px 20px 30px;
+  height: 846px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Gap = styled.div`

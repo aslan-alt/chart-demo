@@ -19,8 +19,10 @@ export const Channel: FC<Props> = ({id}) => {
     }
     return x.length >= 5 ? 40 / 3 : 40;
   })();
+
   return (
-    <Container to={`/chat/chanel/:${id}`} isActive={isActive}>
+    // xx
+    <Container to={`/chat/chanel/:${id}`} $isActive={isActive}>
       <ChannelImgContainer>
         {x.map((item, index) => {
           return <img key={item + index} width={imgSize} height={imgSize} src={item} alt="" />;
@@ -31,13 +33,11 @@ export const Channel: FC<Props> = ({id}) => {
   );
 };
 
-const Container = styled(Link)<{isActive: boolean}>`
+const Container = styled(Link)<{$isActive: boolean}>`
   display: flex;
   height: 75px;
   background: var(--mt-chat-background-black-color);
-  ${(props) => {
-    return props.isActive ? 'background:#26252D;' : '';
-  }};
+  ${(props) => (props.$isActive ? 'background:#26252D;' : '')}
   padding: 0 20px 0 20px;
   align-items: center;
 `;

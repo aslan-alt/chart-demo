@@ -1,15 +1,24 @@
+import React from 'react';
 import styled from 'styled-components';
 import {Icon} from './Icon';
 import {SearchInput} from './SearchInput';
+import {useState} from 'react';
+import {Log} from './Log';
+import {LOG_URL_GREEN, LOG_URL_WHITE} from '../constant/imgUrl';
 
 export const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [actionType, setActionType] = useState<'Register' | 'Login'>('Login');
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <Container>
       <LeftWrapper>
-        <Log
-          src="https://assets.website-files.com/6150e12db09d8462f07c877d/61db9d46e675d673f6b0b10e_logo-gradual.svg"
-          alt="icon"
-        />
+        <Log url={LOG_URL_GREEN} width={40} />
+        <div>Gradual Community</div>
       </LeftWrapper>
       <RightWrapper>
         <SearchInput />
@@ -19,11 +28,98 @@ export const Header = () => {
         </Time>
         <Tips name="tips_2" size={1.5} />
         <Tips name="tips_1" size={1.5} />
-        <Avatar name="avatar" />
+        <Avatar name="avatar" onClick={() => setIsOpen(true)} />
+        {isOpen && (
+          <Modal>
+            <ModalHeader>
+              <Log url={LOG_URL_WHITE} />
+              <CloseButton onClick={closeModal}>
+                <Icon name="close" />
+              </CloseButton>
+            </ModalHeader>
+            <Input
+              value={''}
+              placeholder="User Name"
+              onInput={(e) => {
+                console.log(e);
+              }}
+            />
+            <Input
+              value={''}
+              placeholder="Password"
+              onInput={(e) => {
+                console.log(e);
+              }}
+            />
+            <Input
+              value={''}
+              placeholder="Confirm password"
+              onInput={(e) => {
+                console.log(e);
+              }}
+            />
+
+            <Button>login</Button>
+          </Modal>
+        )}
       </RightWrapper>
     </Container>
   );
 };
+
+const Modal = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  margin-top: -300px;
+  background: var(--mt-chat-white-font-color);
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const Button = styled.button`
+  margin-top: 30px;
+  width: 300px;
+  height: 48px;
+  background: var(--mt-chat-background-black-color);
+  color: var(--mt-chat-white-font-color);
+  border: 1px solid var(--mt-chat-background-black-color);
+  font-size: var(--mt-chat-l-font-size);
+  font-weight: var(--mt-font-weight-large);
+`;
+
+const CloseButton = styled.label`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+`;
+
+const ModalHeader = styled.div`
+  background: rgba(11, 12, 16);
+  height: 68px;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+`;
+
+const Input = styled.input`
+  height: 48px;
+  width: 300px;
+  margin-top: 30px;
+  background: transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(11, 12, 16);
+  color: black;
+  padding-left: var(--mt-spacing-1x);
+`;
 
 const Container = styled.div`
   width: var(--mt-chat-width);
@@ -36,10 +132,11 @@ const Container = styled.div`
 
 const LeftWrapper = styled.div`
   display: flex;
-`;
-
-const Log = styled.img`
-  width: 120px;
+  color: var(--mt-chat-white-font-color);
+  align-items: center;
+  gap: 25px;
+  font-weight: 600;
+  font-size: 14px;
 `;
 
 const RightWrapper = styled.div`
@@ -67,4 +164,5 @@ const Avatar = styled(Icon)`
   width: 36px;
   height: 36px;
   margin-left: 22px;
+  cursor: pointer;
 `;

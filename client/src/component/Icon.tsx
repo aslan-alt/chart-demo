@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-import {FC} from 'react';
+import React, {FC} from 'react';
 
 type Props = {
   size?: number;
   color?: string;
   name: string;
+  onClick?: () => void;
 };
 export const Icon: FC<Props> = (props) => {
   return (

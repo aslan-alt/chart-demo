@@ -25,11 +25,32 @@ export const ChannelsAndMessages = () => {
             <MembersCount>{4}</MembersCount>
           </GroupButton>
         </ActiveChannelHeader>
-        <ActiveChannelContent>{selectedId}</ActiveChannelContent>
+        <ActiveChannelContent>
+          <MessageContainer>xxxxzzzz</MessageContainer>
+
+          <MessageInputWrapper>
+            <MessageInput placeholder="Enter" />
+          </MessageInputWrapper>
+        </ActiveChannelContent>
       </ContentRight>
     </Content>
   );
 };
+
+const MessageContainer = styled.div`
+  display: flex;
+  flex-grow: 1;
+`;
+
+const MessageInput = styled.input`
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: var(--mt-chat-l-font-size);
+  font-weight: 500;
+`;
 
 const StyledInput = styled(SearchInput)`
   width: 100%;
@@ -61,11 +82,14 @@ const ActiveChannelHeader = styled.div`
 `;
 
 const ActiveChannelContent = styled.div`
-  height: 64px;
+  height: 782px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const GroupButton = styled.button`
-  border: 1px solid var(--mt-chat-white-font-color);
+  border: none;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
   width: 90px;
   height: 100%;
   border-radius: 50px;
@@ -76,6 +100,13 @@ const GroupButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const MessageInputWrapper = styled.label`
+  border-top: 2px solid rgb(46, 45, 51);
+  height: 100px;
+  padding: 0 20px 0 20px;
+  color: var(--mt-chat-white-font-color);
 `;
 
 const MembersCount = styled.span`
@@ -93,4 +124,5 @@ const ContentLeft = styled.div`
 
 const ContentRight = styled.div`
   background: #26252d;
+  height: 846px;
 `;

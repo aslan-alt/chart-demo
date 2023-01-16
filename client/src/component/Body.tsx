@@ -1,7 +1,6 @@
+import React, {FC} from 'react';
 import styled from 'styled-components';
 import {Sidebar} from './Sidebar';
-
-import React, {FC} from 'react';
 
 type Props = {
   children: React.ReactNode;

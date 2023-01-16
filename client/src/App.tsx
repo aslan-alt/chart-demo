@@ -1,7 +1,5 @@
 import React, {FC, useEffect} from 'react';
-
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
-
 import {Layout} from './component/Layout';
 import {ChannelsAndMessages} from './component/ChannelsAndMessages';
 
