@@ -36,6 +36,7 @@ User.find({},(e,doc)=>{
     console.log(doc);
 
 })
+
 app.use(cors({
     origin: function (origin, callback) {
         if(['http://localhost:3000'].includes(origin??'')){

@@ -1,13 +1,17 @@
 import React, {FC, useEffect} from 'react';
-const getData = async ()=>{
-    return  await fetch('http://localhost:8000/graphql',{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-            'Accept':'application/json'
-        },
-        body:JSON.stringify({
-            query:`
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import {Home} from './Home';
+
+const getData = async () => {
+  return await fetch('http://localhost:8000/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
             query Account($id:Int, $city:String) {
                 account(id:$id){
                  name
@@ -16,21 +20,28 @@ const getData = async ()=>{
                 }
             }
             `,
-            variables:{id:1,city:'shanghai'}
-        })
-    })
-}
+      variables: {id: 1, city: 'shanghai'},
+    }),
+  });
+};
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+  },
+  {
+    path: '/forum',
+    element: <div>forum</div>,
+  },
+]);
+const App: FC = () => {
+  useEffect(() => {
+    getData()
+      ?.then((res) => res.json())
+      .then((res) => console.log(res));
+  }, []);
 
-
-const  App:FC =()=> {
-    useEffect(()=>{
-         getData()?.then(res=> res.json()).then(res=> console.log(res))
-    },[])
-  return (
-    <div>
-      ffffxxxx
-    </div>
-  );
-}
+  return <RouterProvider router={router} />;
+};
 
 export default App;
