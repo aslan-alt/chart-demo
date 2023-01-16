@@ -1,13 +1,13 @@
 import {Header} from './Header';
 import {Body} from './Body';
-import React from 'react';
+import React, {ComponentProps, FC} from 'react';
 import styled from 'styled-components';
 
-export const Layout = () => {
+export const Layout: FC<ComponentProps<typeof Body>> = ({children}) => {
   return (
     <Container>
       <Header />
-      <Body />
+      <Body>{children}</Body>
     </Container>
   );
 };

@@ -37,5 +37,5 @@ const Count = styled.div`
   border-radius: 100px;
   font-size: 11px;
   font-weight: var(--mt-font-weight-medium);
-  color: #ffffff;
+  color: var(--mt-chat-white-font-color);
 `;
