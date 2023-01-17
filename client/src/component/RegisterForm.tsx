@@ -5,6 +5,7 @@ import axios from 'axios';
 import {registerUrl} from '../constant/requestUrls';
 import {toast} from 'react-toastify';
 import {imgUrls} from '../constant/defaultAvatars';
+import {useSocketContext} from '../hooks/socketProvider';
 
 type Props = {
   updateActionType: (v: ActionType) => void;
@@ -12,7 +13,7 @@ type Props = {
 };
 // TODO: Refactor LoginForm and RegisterForm
 
-export type RegisterFormType = {
+type RegisterFormType = {
   username: string;
   password: string;
   confirmPassword: string;
@@ -23,6 +24,7 @@ export type FormTarget = HTMLInputElement & {
   value: Partial<RegisterFormType>;
 };
 export const RegisterForm: FC<Props> = ({updateActionType, closeModal}) => {
+  const {setCurrentUser} = useSocketContext();
   const [index, setIndex] = useState(8);
   const [isLoading, setIsLoading] = useState(false);
   const [registerForm, setRegisterForm] = useState<RegisterFormType>({
@@ -47,6 +49,7 @@ export const RegisterForm: FC<Props> = ({updateActionType, closeModal}) => {
       });
       if (res.data.status) {
         localStorage.setItem('chat-user', JSON.stringify(res.data.user));
+        setCurrentUser?.(res.data.user);
         closeModal();
       }
     } catch (e) {

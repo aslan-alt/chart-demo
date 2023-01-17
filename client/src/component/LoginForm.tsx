@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import React, {FC, useState} from 'react';
 import {ActionType} from './Header';
-import {FormTarget, RegisterFormType} from './RegisterForm';
+import {FormTarget} from './RegisterForm';
 import axios from 'axios';
 import {loginUrl} from '../constant/requestUrls';
 import {toast} from 'react-toastify';
+import {useSocketContext} from '../hooks/socketProvider';
 
 type Props = {
   updateActionType: (v: ActionType) => void;
@@ -12,11 +13,10 @@ type Props = {
 };
 // TODO: Refactor LoginForm and RegisterForm
 
-type LoginFormType = Omit<RegisterFormType, 'confirmPassword'>;
-
 export const LoginForm: FC<Props> = ({updateActionType, closeModal}) => {
+  const {setCurrentUser} = useSocketContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [loginForm, setLoginForm] = useState<LoginFormType>({
+  const [loginForm, setLoginForm] = useState({
     username: '',
     password: '',
   });
@@ -33,6 +33,7 @@ export const LoginForm: FC<Props> = ({updateActionType, closeModal}) => {
       });
       if (res.data.status) {
         localStorage.setItem('chat-user', JSON.stringify(res.data.user));
+        setCurrentUser?.(res.data.user);
         closeModal();
       }
     } catch (e) {

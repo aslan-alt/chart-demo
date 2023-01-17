@@ -8,6 +8,7 @@ import {UserType} from './Header';
 import {Icon} from './Icon';
 import {MessageItem} from './MessageItem';
 import {toast} from 'react-toastify';
+import {useSocketContext} from '../hooks/socketProvider';
 
 export type Messages = {
   fromSelf: boolean;
@@ -18,14 +19,16 @@ export type Messages = {
 
 export type User = UserType & {_id?: string};
 export const MembersContent = () => {
-  const params = useParams<{id: string}>();
-  const selectedId = params?.id?.replace(':', '');
-
   const [message, setMessage] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [allMessages, setAllMessages] = useState<Messages[]>([]);
+  const [arrivalMessage, setArrivalMessage] = useState<Messages>();
 
-  const currentUser = JSON.parse(localStorage.getItem('chat-user') ?? '{}') as User;
+  const params = useParams<{id: string}>();
+  const selectedId = params?.id?.replace(':', '');
+
+  const {currentUser, socket} = useSocketContext();
+
   const selectedUser = users.find((item) => item?._id === selectedId) as User;
 
   useEffect(() => {
@@ -47,6 +50,21 @@ export const MembersContent = () => {
         .then((res) => setAllMessages(res.data ?? []));
     }
   }, [selectedUser]);
+
+  useEffect(() => {
+    socket?.on('msg-receive', ({message, from}) => {
+      setArrivalMessage({
+        fromSelf: false,
+        message,
+        updatedAt: new Date().toDateString(),
+        sender: from,
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage && setAllMessages((state) => [...state, arrivalMessage]);
+  }, [arrivalMessage]);
 
   return (
     <Content>
@@ -73,7 +91,7 @@ export const MembersContent = () => {
         </ActiveChannelHeader>
         <ActiveChannelContent>
           <MessageContainer>
-            {allMessages.map((item) => {
+            {allMessages.map((item, index) => {
               const user = item.fromSelf
                 ? currentUser
                 : users.find((user) => {
@@ -82,7 +100,7 @@ export const MembersContent = () => {
 
               return (
                 <MessageItem
-                  key={item.message}
+                  key={index + item.message}
                   username={user?.username ?? ''}
                   avatarImage={user?.avatarImage ?? ''}
                   message={item.message}
@@ -101,11 +119,15 @@ export const MembersContent = () => {
                   if (message === '') {
                     return;
                   }
-                  await axios.post(sendMessage, {
-                    from: currentUser._id,
+                  const params = {
+                    from: currentUser?._id ?? '',
                     to: [selectedUser._id],
                     message,
-                  });
+                  };
+                  const {data} = await axios.post(sendMessage, params);
+                  socket?.emit('send-msg', {...params, to: selectedUser._id});
+                  data?.allMessage && setAllMessages(data?.allMessage);
+
                   toast('sent successful!', {
                     type: 'success',
                   });

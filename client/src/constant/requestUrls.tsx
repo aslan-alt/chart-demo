@@ -1,4 +1,4 @@
-const host = 'http://localhost:8000';
+export const host = 'http://localhost:8000';
 export const loginUrl = `${host}/api/auth/login`;
 export const registerUrl = `${host}/api/auth/register`;
 

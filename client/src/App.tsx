@@ -3,6 +3,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {Layout} from './component/Layout';
 import {ChatContent} from './component/ChatContent';
 import {MembersContent} from './component/MembersContent';
+import {SocketWrapper} from './hooks/socketProvider';
 
 const router = createBrowserRouter([
   {
@@ -53,7 +54,11 @@ const router = createBrowserRouter([
   },
 ]);
 const App: FC = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <SocketWrapper>
+      <RouterProvider router={router} />
+    </SocketWrapper>
+  );
 };
 
 export default App;

@@ -8,20 +8,19 @@ import {LOG_URL_GREEN, LOG_URL_WHITE} from '../constant/imgUrl';
 import {LoginForm} from './LoginForm';
 import {RegisterForm} from './RegisterForm';
 import {ToastContainer} from 'react-toastify';
+import {useSocketContext} from '../hooks/socketProvider';
 
 export type ActionType = 'Register' | 'Login';
 
 export type UserType = {
   username?: string;
-  password?: string;
-  confirmPassword?: string;
+  _id: string;
   avatarImage?: string;
 };
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [actionType, setActionType] = useState<ActionType>('Login');
-  const user = JSON.parse(localStorage.getItem('chat-user') ?? '{}') as UserType;
-
+  const {currentUser} = useSocketContext();
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -44,8 +43,8 @@ export const Header = () => {
         </Time>
         <Tips name="tips_2" size={1.5} />
         <Tips name="tips_1" size={1.5} />
-        {user?.avatarImage ? (
-          <Avatar src={user?.avatarImage} alt="" onClick={() => setIsOpen(true)} />
+        {currentUser?.avatarImage ? (
+          <Avatar src={currentUser?.avatarImage} alt="" onClick={() => setIsOpen(true)} />
         ) : (
           <AvatarIcon name="avatar" onClick={() => setIsOpen(true)} />
         )}
