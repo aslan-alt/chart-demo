@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, {FC, useState} from 'react';
 import {ActionType} from './Header';
 import axios from 'axios';
-import {registerUrl} from '../constant/requests';
+import {registerUrl} from '../constant/requestUrls';
 import {toast} from 'react-toastify';
 import {imgUrls} from '../constant/defaultAvatars';
 

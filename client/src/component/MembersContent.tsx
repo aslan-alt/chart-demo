@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {SearchInput} from './SearchInput';
 import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
-import {getUsers, sendMessage} from '../constant/requests';
+import {getUsers, sendMessage} from '../constant/requestUrls';
 import {UserType} from './Header';
 import {Icon} from './Icon';
 import {MessageItem} from './MessageItem';

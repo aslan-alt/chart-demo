@@ -16,4 +16,22 @@ export const addMessage: RequestHandler = async (req, res) => {
     console.log(e);
   }
 };
-export const getAllMessages: RequestHandler = async (req, res) => {};
+export const getAllMessages: RequestHandler = async (req, res) => {
+  const {from, to} = req.body;
+  try {
+    const messages = await MessageModel.find({
+      users: {
+        $all: [from, ...to],
+      },
+    }).sort({updatedAt: 1});
+    const projectMessages = messages.map((msg) => {
+      return {
+        sender: msg.message?.sender.toString(),
+        message: msg.message?.text,
+      };
+    });
+    res.json(projectMessages);
+  } catch (e) {
+    console.log(e);
+  }
+};

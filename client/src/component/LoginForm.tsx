@@ -3,7 +3,7 @@ import React, {FC, useState} from 'react';
 import {ActionType} from './Header';
 import {FormTarget, RegisterFormType} from './RegisterForm';
 import axios from 'axios';
-import {loginUrl} from '../constant/requests';
+import {loginUrl} from '../constant/requestUrls';
 import {toast} from 'react-toastify';
 
 type Props = {
