@@ -4,7 +4,7 @@ import {ActionType} from './Header';
 import {FormTarget, RegisterFormType} from './RegisterForm';
 import axios from 'axios';
 import {loginUrl} from '../constant/requests';
-import {ToastContainer} from 'react-toastify';
+import {toast} from 'react-toastify';
 
 type Props = {
   updateActionType: (v: ActionType) => void;
@@ -28,13 +28,17 @@ export const LoginForm: FC<Props> = ({updateActionType, closeModal}) => {
     setIsLoading(true);
     try {
       const res = await axios.post(loginUrl, {...loginForm});
-      console.log('res-------');
-      console.log(res);
+      toast(res.data.status ? 'Login successful' : res.data.msg, {
+        type: res.data.status ? 'success' : 'error',
+      });
+      if (res.data.status) {
+        localStorage.setItem('chat-user', JSON.stringify(res.data.user));
+        closeModal();
+      }
     } catch (e) {
       console.log(e);
     }
     setIsLoading(false);
-    closeModal();
   };
 
   return (
@@ -70,7 +74,6 @@ export const LoginForm: FC<Props> = ({updateActionType, closeModal}) => {
           Create a New Account
         </ToggleButton>
       </Tips>
-      <ToastContainer />
     </Container>
   );
 };

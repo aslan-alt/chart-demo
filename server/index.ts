@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import {userRouter} from './routers/userRoutes';
+import {messageRouter} from './routers/messagesRoutes';
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.use(
 );
 app.use(express.json());
 app.use('/api/auth', userRouter);
+app.use('/api/messages', messageRouter);
 app.listen(port, () => {
   console.log(`listening ${port}`);
 });

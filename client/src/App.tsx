@@ -1,26 +1,27 @@
 import React, {FC} from 'react';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {Layout} from './component/Layout';
-import {ChannelsAndMessages} from './component/ChannelsAndMessages';
+import {ChatContent} from './component/ChatContent';
+import {MembersContent} from './component/MembersContent';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <Layout>
-        <ChannelsAndMessages />
+        <ChatContent />
       </Layout>
     ),
   },
   {
     path: 'forum',
-    element: <Layout>xxxxz</Layout>,
+    element: <Layout>forum</Layout>,
   },
   {
     path: 'chat',
     element: (
       <Layout>
-        <ChannelsAndMessages />
+        <ChatContent />
       </Layout>
     ),
     children: [
@@ -35,7 +36,16 @@ const router = createBrowserRouter([
   },
   {
     path: '/members',
-    element: <Layout>members</Layout>,
+    element: (
+      <Layout>
+        <MembersContent />
+      </Layout>
+    ),
+    children: [
+      {
+        path: '/members/user/:id',
+      },
+    ],
   },
   {
     path: '/contributors',

@@ -43,7 +43,7 @@ const Container = styled(Link)<{$isActive: boolean}>`
   align-items: center;
 `;
 
-const ChannelImgContainer = styled.div`
+export const ChannelImgContainer = styled.div`
   width: 40px;
   height: 40px;
   display: flex;

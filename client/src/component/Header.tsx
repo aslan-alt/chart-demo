@@ -7,11 +7,20 @@ import {Log} from './Log';
 import {LOG_URL_GREEN, LOG_URL_WHITE} from '../constant/imgUrl';
 import {LoginForm} from './LoginForm';
 import {RegisterForm} from './RegisterForm';
+import {ToastContainer} from 'react-toastify';
 
 export type ActionType = 'Register' | 'Login';
+
+export type UserType = {
+  username?: string;
+  password?: string;
+  confirmPassword?: string;
+  avatarImage?: string;
+};
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [actionType, setActionType] = useState<ActionType>('Login');
+  const user = JSON.parse(localStorage.getItem('chat-user') ?? '') as UserType;
 
   const closeModal = () => {
     setIsOpen(false);
@@ -35,7 +44,12 @@ export const Header = () => {
         </Time>
         <Tips name="tips_2" size={1.5} />
         <Tips name="tips_1" size={1.5} />
-        <Avatar name="avatar" onClick={() => setIsOpen(true)} />
+        {user?.avatarImage ? (
+          <Avatar src={user?.avatarImage} alt="" onClick={() => setIsOpen(true)} />
+        ) : (
+          <AvatarIcon name="avatar" onClick={() => setIsOpen(true)} />
+        )}
+
         {isOpen && (
           <Modal>
             <ModalHeader>
@@ -51,6 +65,7 @@ export const Header = () => {
             )}
           </Modal>
         )}
+        <ToastContainer />
       </RightWrapper>
     </Container>
   );
@@ -125,9 +140,17 @@ const Tips = styled(Icon)`
   margin-left: var(--mt-spacing-3x);
 `;
 
-const Avatar = styled(Icon)`
+const avatarStyled = `
   width: 36px;
   height: 36px;
   margin-left: 22px;
   cursor: pointer;
+`;
+
+const AvatarIcon = styled(Icon)`
+  ${avatarStyled}
+`;
+const Avatar = styled.img`
+  ${avatarStyled};
+  border-radius: 50%;
 `;

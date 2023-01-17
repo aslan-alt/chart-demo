@@ -1,7 +1,6 @@
 import {RequestHandler} from 'express';
 import bcrypt from 'bcrypt';
-import {UserSchema} from '../model/userModel';
-import mongoose from 'mongoose';
+import {UserModel} from '../model/userModel';
 import {omit} from 'lodash';
 
 type RegisterRequest = {
@@ -13,20 +12,55 @@ type RegisterRequest = {
 export const register: RequestHandler = async (req, res) => {
   try {
     const {username, password, avatarImage} = req.body as RegisterRequest;
-    const User = mongoose.model('user', UserSchema);
-    const userAlreadyExists = await User.findOne({username});
-    console.log(userAlreadyExists);
+    const userAlreadyExists = await UserModel.findOne({username});
     if (userAlreadyExists) {
       return res.json({msg: 'Username Already used', status: false});
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    const user = await UserModel.create({
       username,
       password: hashedPassword,
       avatarImage,
     });
+
     res.json({status: true, user: omit(user, 'password')});
   } catch (error) {
     res.json({status: false, error, msg: 'registration failed'});
+  }
+};
+
+type LoginRequest = Omit<RegisterRequest, 'confirmPassword' | 'avatarImage'>;
+export const login: RequestHandler = async (req, res) => {
+  try {
+    const {username, password} = req.body as LoginRequest;
+    const user = await UserModel.findOne({username});
+    const isPasswordValid = await bcrypt.compare(password, user?.password ?? '');
+    if (!user || !isPasswordValid) {
+      return res.json({msg: 'Incorrect username or password', status: false});
+    }
+
+    isPasswordValid && res.json({status: true, user: omit(user, 'password')});
+  } catch (error) {
+    res.json({status: false, error, msg: 'login failed'});
+  }
+};
+
+export const getUser: RequestHandler = async (req, res) => {
+  console.log('req?.params--------');
+  console.log(req?.url);
+  try {
+    const users = await UserModel.find({_id: {$ne: req?.params?.id}}).select([
+      'username',
+      'avatarImage',
+      '_id',
+    ]);
+
+    if (!users) {
+      return res.json({msg: 'Incorrect username or password', status: false});
+    }
+
+    res.json({status: true, users});
+  } catch (error) {
+    res.json({status: false, error, msg: 'login failed'});
   }
 };

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import React, {FC, useState} from 'react';
 import {ActionType} from './Header';
 import axios from 'axios';
-import {loginUrl} from '../constant/requests';
-import {toast, ToastContainer} from 'react-toastify';
+import {registerUrl} from '../constant/requests';
+import {toast} from 'react-toastify';
 import {imgUrls} from '../constant/defaultAvatars';
 
 type Props = {
@@ -37,18 +37,23 @@ export const RegisterForm: FC<Props> = ({updateActionType, closeModal}) => {
 
   const onRegister = async () => {
     setIsLoading(true);
+    if (Object.values(registerForm).length !== 3) {
+      toast('Missing required fields', {type: 'error'});
+    }
     try {
-      const res = await axios.post(loginUrl, {...registerForm, avatarImage: imgUrls[index]});
+      const res = await axios.post(registerUrl, {...registerForm, avatarImage: imgUrls[index]});
       toast(res.data.status ? 'Registration successful!' : res.data.msg ?? '', {
         type: res.data.status ? 'success' : 'error',
-        theme: 'light',
       });
+      if (res.data.status) {
+        localStorage.setItem('chat-user', JSON.stringify(res.data.user));
+        closeModal();
+      }
     } catch (e) {
       console.log(e);
     }
 
     setIsLoading(false);
-    closeModal();
   };
 
   return (
@@ -108,7 +113,6 @@ export const RegisterForm: FC<Props> = ({updateActionType, closeModal}) => {
           Login
         </ToggleButton>
       </Tips>
-      <ToastContainer />
     </Container>
   );
 };

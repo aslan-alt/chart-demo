@@ -1,3 +1,7 @@
 const host = 'http://localhost:8000';
-export const registerUrl = `${host}/api/auth/login`;
-export const loginUrl = `${host}/api/auth/register`;
+export const loginUrl = `${host}/api/auth/login`;
+export const registerUrl = `${host}/api/auth/register`;
+
+export const getUsers = `${host}/api/auth/getUsers`;
+
+export const sendMessage = `${host}/api/messages/addMessage`;
