@@ -20,7 +20,7 @@ export type UserType = {
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [actionType, setActionType] = useState<ActionType>('Login');
-  const user = JSON.parse(localStorage.getItem('chat-user') ?? '') as UserType;
+  const user = JSON.parse(localStorage.getItem('chat-user') ?? '{}') as UserType;
 
   const closeModal = () => {
     setIsOpen(false);

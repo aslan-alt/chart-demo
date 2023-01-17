@@ -3,41 +3,50 @@ import styled from 'styled-components';
 import {SearchInput} from './SearchInput';
 import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
-import {getUsers, sendMessage} from '../constant/requestUrls';
+import {getAllMessages, getUsers, sendMessage} from '../constant/requestUrls';
 import {UserType} from './Header';
 import {Icon} from './Icon';
 import {MessageItem} from './MessageItem';
+import {toast} from 'react-toastify';
 
-export type User = UserType & {_id: string};
+export type Messages = {
+  fromSelf: boolean;
+  message: string;
+  updatedAt: string;
+  sender: string;
+};
+
+export type User = UserType & {_id?: string};
 export const MembersContent = () => {
   const params = useParams<{id: string}>();
   const selectedId = params?.id?.replace(':', '');
 
   const [message, setMessage] = useState('');
   const [users, setUsers] = useState<User[]>([]);
+  const [allMessages, setAllMessages] = useState<Messages[]>([]);
 
-  const currentUser = JSON.parse(localStorage.getItem('chat-user') ?? '');
-  const selectedUser = users.find((item) => item._id === selectedId) as User;
-  const messages =
-    users.length > 0
-      ? [
-          {
-            user: users[0],
-            message: 'xxxxxx',
-          },
-          {
-            user: users[1],
-            message: 'xxxxxx',
-          },
-        ]
-      : [];
+  const currentUser = JSON.parse(localStorage.getItem('chat-user') ?? '{}') as User;
+  const selectedUser = users.find((item) => item?._id === selectedId) as User;
+
   useEffect(() => {
     if (!localStorage.getItem('chat-user')) {
       return;
     }
-
-    axios.get(`${getUsers}/${currentUser._id}`).then((res) => setUsers(res.data.users ?? []));
+    if (currentUser?._id) {
+      axios.get(`${getUsers}/${currentUser._id}`).then((res) => setUsers(res.data.users ?? []));
+    }
   }, []);
+
+  useEffect(() => {
+    if (selectedUser?._id) {
+      axios
+        .post(`${getAllMessages}`, {
+          from: currentUser?._id,
+          to: [selectedUser?._id],
+        })
+        .then((res) => setAllMessages(res.data ?? []));
+    }
+  }, [selectedUser]);
 
   return (
     <Content>
@@ -64,15 +73,21 @@ export const MembersContent = () => {
         </ActiveChannelHeader>
         <ActiveChannelContent>
           <MessageContainer>
-            {messages.map((item, index) => {
-              const isSameUser = index !== 0 && messages[index].user?._id === item.user?._id;
+            {allMessages.map((item) => {
+              const user = item.fromSelf
+                ? currentUser
+                : users.find((user) => {
+                    return user._id === item.sender;
+                  });
 
               return (
                 <MessageItem
-                  key={item.user?._id}
+                  key={item.message}
+                  username={user?.username ?? ''}
+                  avatarImage={user?.avatarImage ?? ''}
                   message={item.message}
-                  user={item?.user}
-                  isRight={isSameUser}
+                  updatedAt={item.updatedAt}
+                  isSelf={item.fromSelf}
                 />
               );
             })}
@@ -83,14 +98,18 @@ export const MembersContent = () => {
               value={message}
               onKeyDown={async (e) => {
                 if (e.key === 'Enter') {
-                  console.log('huichzhixingle');
-                  const {data} = await axios.post(sendMessage, {
+                  if (message === '') {
+                    return;
+                  }
+                  await axios.post(sendMessage, {
                     from: currentUser._id,
                     to: [selectedUser._id],
                     message,
                   });
-                  console.log('data------');
-                  console.log(data);
+                  toast('sent successful!', {
+                    type: 'success',
+                  });
+                  setMessage('');
                 }
               }}
               onInput={(e) => {
@@ -107,11 +126,24 @@ export const MembersContent = () => {
 
 const MessageContainer = styled.div`
   display: flex;
-  flex-grow: 1;
+  height: 680px;
   color: white;
   padding: 20px;
+  overflow: auto;
   flex-direction: column;
   gap: 30px;
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #4e4e4e;
+    border-radius: 25px;
+  }
 `;
 
 const UserItem = styled(Link)<{$isActive: boolean}>`
@@ -164,7 +196,8 @@ export const Avatar = styled.img`
 export const Name = styled.p`
   color: white;
   margin-left: 2px;
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 12px;
   width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;

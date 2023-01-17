@@ -7,9 +7,9 @@ export const addMessage: RequestHandler = async (req, res) => {
     const data = await MessageModel.create({
       message: {
         text: message,
-        users: [from, ...to],
-        sender: from,
       },
+      users: [from, ...to],
+      sender: from,
     });
     res.json({msg: data ? 'Message sent successfully' : 'Message sending failed'});
   } catch (e) {
@@ -18,16 +18,24 @@ export const addMessage: RequestHandler = async (req, res) => {
 };
 export const getAllMessages: RequestHandler = async (req, res) => {
   const {from, to} = req.body;
+  console.log('from--------');
+  console.log(from);
+  console.log('to-------');
+  console.log(to);
   try {
     const messages = await MessageModel.find({
       users: {
         $all: [from, ...to],
       },
     }).sort({updatedAt: 1});
+    console.log('messages-----');
+    console.log(messages);
     const projectMessages = messages.map((msg) => {
       return {
-        sender: msg.message?.sender.toString(),
+        fromSelf: msg?.sender?.toString() === from,
         message: msg.message?.text,
+        updatedAt: msg.updatedAt,
+        sender: msg?.sender?.toString(),
       };
     });
     res.json(projectMessages);

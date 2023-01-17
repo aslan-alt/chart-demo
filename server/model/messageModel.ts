@@ -7,12 +7,12 @@ export const messageSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      users: Array,
-      sender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-        required: true,
-      },
+    },
+    users: Array,
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
     },
   },
   {timestamps: true}

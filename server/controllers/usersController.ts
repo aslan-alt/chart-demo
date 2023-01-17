@@ -46,8 +46,6 @@ export const login: RequestHandler = async (req, res) => {
 };
 
 export const getUser: RequestHandler = async (req, res) => {
-  console.log('req?.params--------');
-  console.log(req?.url);
   try {
     const users = await UserModel.find({_id: {$ne: req?.params?.id}}).select([
       'username',
