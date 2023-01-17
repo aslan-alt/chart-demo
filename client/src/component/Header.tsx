@@ -5,13 +5,20 @@ import {SearchInput} from './SearchInput';
 import {useState} from 'react';
 import {Log} from './Log';
 import {LOG_URL_GREEN, LOG_URL_WHITE} from '../constant/imgUrl';
+import {LoginForm} from './LoginForm';
+import {RegisterForm} from './RegisterForm';
 
+export type ActionType = 'Register' | 'Login';
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [actionType, setActionType] = useState<'Register' | 'Login'>('Login');
+  const [actionType, setActionType] = useState<ActionType>('Login');
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const updateActionType = (action: ActionType) => {
+    setActionType(action);
   };
 
   return (
@@ -37,29 +44,11 @@ export const Header = () => {
                 <Icon name="close" />
               </CloseButton>
             </ModalHeader>
-            <Input
-              value={''}
-              placeholder="User Name"
-              onInput={(e) => {
-                console.log(e);
-              }}
-            />
-            <Input
-              value={''}
-              placeholder="Password"
-              onInput={(e) => {
-                console.log(e);
-              }}
-            />
-            <Input
-              value={''}
-              placeholder="Confirm password"
-              onInput={(e) => {
-                console.log(e);
-              }}
-            />
-
-            <Button>login</Button>
+            {actionType === 'Login' ? (
+              <LoginForm updateActionType={updateActionType} />
+            ) : (
+              <RegisterForm updateActionType={updateActionType} />
+            )}
           </Modal>
         )}
       </RightWrapper>
@@ -76,19 +65,6 @@ const Modal = styled.div`
   background: var(--mt-chat-white-font-color);
   width: 500px;
   height: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const Button = styled.button`
-  margin-top: 30px;
-  width: 300px;
-  height: 48px;
-  background: var(--mt-chat-background-black-color);
-  color: var(--mt-chat-white-font-color);
-  border: 1px solid var(--mt-chat-background-black-color);
-  font-size: var(--mt-chat-l-font-size);
-  font-weight: var(--mt-font-weight-large);
 `;
 
 const CloseButton = styled.label`
@@ -108,17 +84,6 @@ const ModalHeader = styled.div`
   width: 100%;
   justify-content: center;
   position: relative;
-`;
-
-const Input = styled.input`
-  height: 48px;
-  width: 300px;
-  margin-top: 30px;
-  background: transparent;
-  border-radius: 10px;
-  border: 1px solid rgba(11, 12, 16);
-  color: black;
-  padding-left: var(--mt-spacing-1x);
 `;
 
 const Container = styled.div`
