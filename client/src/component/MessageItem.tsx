@@ -10,9 +10,17 @@ type Props = {
   isSelf: boolean;
   message: string;
   updatedAt: string;
+  setQuoteMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
-export const MessageItem: FC<Props> = ({username, avatarImage, isSelf, message, updatedAt}) => {
+export const MessageItem: FC<Props> = ({
+  username,
+  avatarImage,
+  isSelf,
+  message,
+  updatedAt,
+  setQuoteMessage,
+}) => {
   const [show, setShow] = useState(false);
 
   const messageAndName = (
@@ -57,8 +65,15 @@ export const MessageItem: FC<Props> = ({username, avatarImage, isSelf, message, 
               </MessageContent>
               {show && (
                 <Icons>
-                  <Icon name="quote" size={1.3} />
-                  <Icon name="delete" size={1.3} />
+                  <Icon
+                    name="quote"
+                    size={1.2}
+                    $cursor
+                    onClick={() => {
+                      setQuoteMessage(message);
+                    }}
+                  />
+                  <Icon name="delete" size={1.3} $cursor />
                 </Icons>
               )}
             </MessageContentWrapper>

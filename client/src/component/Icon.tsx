@@ -6,6 +6,7 @@ type Props = {
   color?: string;
   name: string;
   onClick?: () => void;
+  $cursor?: boolean;
 };
 export const Icon: FC<Props> = (props) => {
   return (
@@ -21,5 +22,8 @@ const Svg = styled.svg<Props>`
   }};
   ${(props) => {
     return `${props.size ? `color: ${props.color};` : ''}`;
+  }};
+  ${(props) => {
+    return `${props.$cursor ? 'cursor: pointer;' : ''}`;
   }};
 `;

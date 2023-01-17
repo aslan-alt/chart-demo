@@ -24,6 +24,8 @@ export const MembersContent = () => {
   const [allMessages, setAllMessages] = useState<Messages[]>([]);
   const [arrivalMessage, setArrivalMessage] = useState<Messages>();
 
+  const [quoteMessage, setQuoteMessage] = useState<string>();
+
   const params = useParams<{id: string}>();
   const selectedId = params?.id?.replace(':', '');
 
@@ -106,6 +108,7 @@ export const MembersContent = () => {
                   message={item.message}
                   updatedAt={item.updatedAt}
                   isSelf={item.fromSelf}
+                  setQuoteMessage={setQuoteMessage}
                 />
               );
             })}
@@ -139,12 +142,76 @@ export const MembersContent = () => {
                 setMessage(value);
               }}
             />
+            {quoteMessage && (
+              <QuoteReplyWrapper>
+                <QuoteReply>
+                  <VerticalLine />
+                  <Text>{quoteMessage}</Text>
+                </QuoteReply>
+                <CloseWrapper
+                  onClick={() => {
+                    setQuoteMessage(undefined);
+                  }}
+                >
+                  <Icon name="close" size={0.8} />
+                </CloseWrapper>
+              </QuoteReplyWrapper>
+            )}
           </MessageInputWrapper>
         </ActiveChannelContent>
       </ContentRight>
     </Content>
   );
 };
+
+const overflowStyle = `
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const CloseWrapper = styled.div`
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #35343e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const QuoteReplyWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const VerticalLine = styled.div`
+  width: 2px;
+  height: 20px;
+  background: #04b17d;
+  border-radius: 100px;
+  margin-right: 10px;
+`;
+
+const QuoteReply = styled.span`
+  height: 40px;
+  max-width: 350px;
+  background: #35343e;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+`;
+
+const Text = styled.p`
+  width: 350px;
+  ${overflowStyle};
+  font-weight: 500;
+  font-size: 13px;
+  color: #7b798f;
+`;
 
 const MessageContainer = styled.div`
   display: flex;
@@ -179,7 +246,7 @@ const UserItem = styled(Link)<{$isActive: boolean}>`
 
 const MessageInput = styled.input`
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
   border: none;
   background: transparent;
   color: white;
@@ -221,9 +288,7 @@ export const Name = styled.p`
   font-weight: 500;
   font-size: 12px;
   width: 240px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  ${overflowStyle}
 `;
 
 const ActiveChannelHeader = styled.div`
@@ -262,8 +327,10 @@ const GroupButton = styled.button`
 const MessageInputWrapper = styled.label`
   border-top: 2px solid rgb(46, 45, 51);
   height: 100px;
-  padding: 0 20px 0 20px;
+  padding: 0 20px 20px 20px;
   color: var(--mt-chat-white-font-color);
+  display: flex;
+  flex-direction: column;
 `;
 
 const Content = styled.div`
