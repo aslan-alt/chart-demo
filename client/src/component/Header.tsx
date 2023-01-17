@@ -45,9 +45,9 @@ export const Header = () => {
               </CloseButton>
             </ModalHeader>
             {actionType === 'Login' ? (
-              <LoginForm updateActionType={updateActionType} />
+              <LoginForm updateActionType={updateActionType} closeModal={closeModal} />
             ) : (
-              <RegisterForm updateActionType={updateActionType} />
+              <RegisterForm updateActionType={updateActionType} closeModal={closeModal} />
             )}
           </Modal>
         )}

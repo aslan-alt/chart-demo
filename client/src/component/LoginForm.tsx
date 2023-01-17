@@ -3,16 +3,18 @@ import React, {FC, useState} from 'react';
 import {ActionType} from './Header';
 import {FormTarget, RegisterFormType} from './RegisterForm';
 import axios from 'axios';
-import {registerUrl} from '../constant/requests';
+import {loginUrl} from '../constant/requests';
+import {ToastContainer} from 'react-toastify';
 
 type Props = {
   updateActionType: (v: ActionType) => void;
+  closeModal: () => void;
 };
 // TODO: Refactor LoginForm and RegisterForm
 
 type LoginFormType = Omit<RegisterFormType, 'confirmPassword'>;
 
-export const LoginForm: FC<Props> = ({updateActionType}) => {
+export const LoginForm: FC<Props> = ({updateActionType, closeModal}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginForm, setLoginForm] = useState<LoginFormType>({
     username: '',
@@ -25,14 +27,14 @@ export const LoginForm: FC<Props> = ({updateActionType}) => {
   const onLogin = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post(registerUrl, {...loginForm});
-
+      const res = await axios.post(loginUrl, {...loginForm});
       console.log('res-------');
       console.log(res);
     } catch (e) {
       console.log(e);
     }
     setIsLoading(false);
+    closeModal();
   };
 
   return (
@@ -55,7 +57,7 @@ export const LoginForm: FC<Props> = ({updateActionType}) => {
       />
 
       <Button onClick={onLogin} disabled={isLoading} isLoading={isLoading}>
-        {isLoading ? 'Login...' : 'Login'}
+        {isLoading ? 'Logging in...' : 'Login'}
       </Button>
 
       <Tips>
@@ -68,6 +70,7 @@ export const LoginForm: FC<Props> = ({updateActionType}) => {
           Create a New Account
         </ToggleButton>
       </Tips>
+      <ToastContainer />
     </Container>
   );
 };

@@ -1,8 +1,9 @@
 import {ChannelNameAndMessage} from './ChannelNameAndMessage';
 import styled from 'styled-components';
 import {Link, useParams} from 'react-router-dom';
-import {imgUrl} from '../constant/test';
+
 import {FC} from 'react';
+import {imgUrls} from '../constant/defaultAvatars';
 
 type Props = {
   id: number;
@@ -12,7 +13,7 @@ export const Channel: FC<Props> = ({id}) => {
   const params = useParams<{id: string}>();
   const selectedId = Number(params?.id?.replace(':', '') ?? -1);
   const isActive = selectedId === id;
-  const x = [imgUrl, imgUrl];
+  const x = imgUrls;
   const imgSize = (() => {
     if ([3, 4].includes(x.length)) {
       return 20;
