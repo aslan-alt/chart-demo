@@ -3,11 +3,8 @@ import {Channel} from './Channel';
 import {Icon} from './Icon';
 import styled from 'styled-components';
 import {SearchInput} from './SearchInput';
-import {useParams} from 'react-router-dom';
 
 export const ChatContent = () => {
-  const params = useParams<{id: string}>();
-  const selectedId = params?.id?.replace(':', '');
   return (
     <Content>
       <ContentLeft>
