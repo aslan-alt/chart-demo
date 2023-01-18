@@ -5,7 +5,7 @@ import axios from 'axios';
 import {registerUrl} from '../constant/requestUrls';
 import {toast} from 'react-toastify';
 import {imgUrls} from '../constant/defaultAvatars';
-import {useSocketContext} from '../hooks/socketProvider';
+import {useSocketContext} from '../Providers/socketProvider';
 
 type Props = {
   updateActionType: (v: ActionType) => void;

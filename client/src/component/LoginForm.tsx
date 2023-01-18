@@ -5,7 +5,7 @@ import {FormTarget} from './RegisterForm';
 import axios from 'axios';
 import {loginUrl} from '../constant/requestUrls';
 import {toast} from 'react-toastify';
-import {useSocketContext} from '../hooks/socketProvider';
+import {useSocketContext} from '../Providers/socketProvider';
 
 type Props = {
   updateActionType: (v: ActionType) => void;

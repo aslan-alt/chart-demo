@@ -3,7 +3,8 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {Layout} from './component/Layout';
 import {ChatContent} from './component/ChatContent';
 import {MembersContent} from './component/MembersContent';
-import {SocketWrapper} from './hooks/socketProvider';
+import {SocketWrapper} from './Providers/socketProvider';
+import {QueryClient, QueryClientProvider} from 'react-query';
 
 const router = createBrowserRouter([
   {
@@ -53,10 +54,20 @@ const router = createBrowserRouter([
     element: <Layout>contributors</Layout>,
   },
 ]);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10000, // 10 seconds
+      retry: false,
+    },
+  },
+});
 const App: FC = () => {
   return (
     <SocketWrapper>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </SocketWrapper>
   );
 };

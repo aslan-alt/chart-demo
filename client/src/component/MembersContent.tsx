@@ -3,13 +3,16 @@ import styled from 'styled-components';
 import {SearchInput} from './SearchInput';
 import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
-import {getAllMessages, getUsers, sendMessage} from '../constant/requestUrls';
+import {sendMessage} from '../constant/requestUrls';
 import {UserType} from './Header';
 import {Icon} from './Icon';
 import {MessageItem} from './MessageItem';
 import {toast} from 'react-toastify';
-import {useSocketContext} from '../hooks/socketProvider';
+import {useSocketContext} from '../Providers/socketProvider';
 import {QuoteReply} from './QuoteReply';
+import {useGetUsers} from '../hooks/useGetUsers';
+import {useGetAllMessages} from '../hooks/useGetAllMessages';
+import {isEmpty} from 'lodash';
 
 export type Messages = {
   fromSelf: boolean;
@@ -24,7 +27,6 @@ export const MembersContent = () => {
   const [message, setMessage] = useState('');
   const [users, setUsers] = useState<User[]>([]);
   const [allMessages, setAllMessages] = useState<Messages[]>([]);
-  const [arrivalMessage, setArrivalMessage] = useState<Messages>();
 
   const [quoteMessage, setQuoteMessage] = useState<string>();
 
@@ -33,41 +35,21 @@ export const MembersContent = () => {
 
   const {currentUser, socket} = useSocketContext();
 
+  useGetUsers({onSuccess: setUsers, id: currentUser?._id});
+
   const selectedUser = users.find((item) => item?._id === selectedId) as User;
-
-  useEffect(() => {
-    if (!localStorage.getItem('chat-user')) {
-      return;
-    }
-    if (currentUser?._id) {
-      axios.get(`${getUsers}/${currentUser._id}`).then((res) => setUsers(res.data.users ?? []));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (selectedUser?._id) {
-      axios
-        .post(`${getAllMessages}`, {
-          from: currentUser?._id,
-          to: [selectedUser?._id],
-        })
-        .then((res) => setAllMessages(res.data ?? []));
-    }
-  }, [selectedUser]);
+  useGetAllMessages({from: currentUser?._id, to: selectedUser?._id, onSuccess: setAllMessages});
 
   useEffect(() => {
     socket?.on('msg-receive', (serverDate) => {
-      setArrivalMessage({
+      const newArrivalMessage = {
         ...serverDate,
         fromSelf: false,
         sender: serverDate.from,
-      });
+      };
+      setAllMessages((state) => [...state, newArrivalMessage]);
     });
   }, []);
-
-  useEffect(() => {
-    arrivalMessage && setAllMessages((state) => [...state, arrivalMessage]);
-  }, [arrivalMessage]);
 
   return (
     <Content>
@@ -121,7 +103,7 @@ export const MembersContent = () => {
               value={message}
               onKeyDown={async (e) => {
                 if (e.key === 'Enter') {
-                  if (message === '') {
+                  if (isEmpty(message) || isEmpty(selectedUser._id)) {
                     return;
                   }
 

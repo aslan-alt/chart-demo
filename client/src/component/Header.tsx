@@ -8,7 +8,7 @@ import {LOG_URL_GREEN, LOG_URL_WHITE} from '../constant/imgUrl';
 import {LoginForm} from './LoginForm';
 import {RegisterForm} from './RegisterForm';
 import {ToastContainer} from 'react-toastify';
-import {useSocketContext} from '../hooks/socketProvider';
+import {useSocketContext} from '../Providers/socketProvider';
 
 export type ActionType = 'Register' | 'Login';
 
