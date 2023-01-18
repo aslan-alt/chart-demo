@@ -4,15 +4,13 @@ import {getAllMessages} from '../constant/requestUrls';
 import {Messages} from '../component/MembersContent';
 import React from 'react';
 
-export const useGetAllMessages = ({
-  from,
-  to,
-  onSuccess,
-}: {
+type UseGetAllMessages = {
   from?: string;
   to?: string;
   onSuccess: React.Dispatch<React.SetStateAction<Messages[]>>;
-}) => {
+};
+
+export const useGetAllMessages = ({from, to, onSuccess}: UseGetAllMessages) => {
   return useQuery(
     ['useGetAllMessages', to],
     async () => {

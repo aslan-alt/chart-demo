@@ -56,6 +56,7 @@ export const LoginForm: FC<Props> = ({updateActionType, closeModal}) => {
         name="password"
         value={loginForm.password}
         placeholder="Password"
+        type="password"
         onInput={(e) => {
           updateForm(e.target as FormTarget);
         }}

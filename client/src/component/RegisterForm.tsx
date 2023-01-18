@@ -25,6 +25,7 @@ export type FormTarget = HTMLInputElement & {
 };
 export const RegisterForm: FC<Props> = ({updateActionType, closeModal}) => {
   const {setCurrentUser} = useSocketContext();
+
   const [index, setIndex] = useState(8);
   const [isLoading, setIsLoading] = useState(false);
   const [registerForm, setRegisterForm] = useState<RegisterFormType>({
@@ -81,24 +82,26 @@ export const RegisterForm: FC<Props> = ({updateActionType, closeModal}) => {
 
       <Input
         name="username"
-        value={registerForm.username}
         placeholder="User Name"
+        value={registerForm.username}
         onInput={(e) => {
           updateForm(e.target as FormTarget);
         }}
       />
       <Input
         name="password"
-        value={registerForm.password}
+        type="password"
         placeholder="Password"
+        value={registerForm.password}
         onInput={(e) => {
           updateForm(e.target as FormTarget);
         }}
       />
       <Input
         name="confirmPassword"
-        value={registerForm.confirmPassword}
+        type="password"
         placeholder="Confirm Password"
+        value={registerForm.confirmPassword}
         onInput={(e) => {
           updateForm(e.target as FormTarget);
         }}

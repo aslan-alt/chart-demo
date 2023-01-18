@@ -4,13 +4,12 @@ import {getUsers} from '../constant/requestUrls';
 import {User} from '../component/MembersContent';
 import React from 'react';
 
-export const useGetUsers = ({
-  id,
-  onSuccess,
-}: {
+type UseGetUsers = {
   id?: string;
   onSuccess: React.Dispatch<React.SetStateAction<User[]>>;
-}) => {
+};
+
+export const useGetUsers = ({id, onSuccess}: UseGetUsers) => {
   return useQuery(
     ['useGetUsers'],
     async () => {

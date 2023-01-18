@@ -22,10 +22,9 @@ export type Messages = {
   quote?: string;
 };
 
-export type User = UserType & {_id?: string};
 export const MembersContent = () => {
   const [message, setMessage] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   const [allMessages, setAllMessages] = useState<Messages[]>([]);
 
   const [quoteMessage, setQuoteMessage] = useState<string>();
@@ -37,7 +36,7 @@ export const MembersContent = () => {
 
   useGetUsers({onSuccess: setUsers, id: currentUser?._id});
 
-  const selectedUser = users.find((item) => item?._id === selectedId) as User;
+  const selectedUser = users.find((item) => item?._id === selectedId) as UserType;
   useGetAllMessages({from: currentUser?._id, to: selectedUser?._id, onSuccess: setAllMessages});
 
   useEffect(() => {
