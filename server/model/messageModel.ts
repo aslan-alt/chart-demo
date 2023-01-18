@@ -14,6 +14,9 @@ export const messageSchema = new mongoose.Schema(
       ref: 'user',
       required: true,
     },
+    quote: {
+      type: String,
+    },
   },
   {timestamps: true}
 );

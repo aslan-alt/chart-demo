@@ -2,9 +2,10 @@ import React, {FC, useContext, useEffect, useRef, useState} from 'react';
 import {io, Socket} from 'socket.io-client';
 import {host} from '../constant/requestUrls';
 import {UserType} from '../component/Header';
+import {Messages} from '../component/MembersContent';
 
 type ServerToClientEvents = {
-  'msg-receive': (value: {from: string; to: string; message: string}) => void;
+  'msg-receive': (value: Messages & {from: string}) => void;
 };
 type ClientToServerEvents = {
   'add-user': (v: string) => void;

@@ -9,12 +9,14 @@ import {Icon} from './Icon';
 import {MessageItem} from './MessageItem';
 import {toast} from 'react-toastify';
 import {useSocketContext} from '../hooks/socketProvider';
+import {QuoteReply} from './QuoteReply';
 
 export type Messages = {
   fromSelf: boolean;
   message: string;
   updatedAt: string;
   sender: string;
+  quote?: string;
 };
 
 export type User = UserType & {_id?: string};
@@ -54,12 +56,11 @@ export const MembersContent = () => {
   }, [selectedUser]);
 
   useEffect(() => {
-    socket?.on('msg-receive', ({message, from}) => {
+    socket?.on('msg-receive', (serverDate) => {
       setArrivalMessage({
+        ...serverDate,
         fromSelf: false,
-        message,
-        updatedAt: new Date().toDateString(),
-        sender: from,
+        sender: serverDate.from,
       });
     });
   }, []);
@@ -108,6 +109,7 @@ export const MembersContent = () => {
                   message={item.message}
                   updatedAt={item.updatedAt}
                   isSelf={item.fromSelf}
+                  quote={item.quote}
                   setQuoteMessage={setQuoteMessage}
                 />
               );
@@ -122,13 +124,15 @@ export const MembersContent = () => {
                   if (message === '') {
                     return;
                   }
-                  const params = {
+
+                  const {data} = await axios.post(sendMessage, {
                     from: currentUser?._id ?? '',
                     to: [selectedUser._id],
                     message,
-                  };
-                  const {data} = await axios.post(sendMessage, params);
-                  socket?.emit('send-msg', {...params, to: selectedUser._id});
+                    ...(quoteMessage ? {quote: quoteMessage} : {}),
+                  });
+
+                  socket?.emit('send-msg', data.lastMessage);
                   data?.allMessage && setAllMessages(data?.allMessage);
 
                   toast('sent successful!', {
@@ -144,10 +148,7 @@ export const MembersContent = () => {
             />
             {quoteMessage && (
               <QuoteReplyWrapper>
-                <QuoteReply>
-                  <VerticalLine />
-                  <Text>{quoteMessage}</Text>
-                </QuoteReply>
+                <QuoteReply quoteMessage={quoteMessage} />
                 <CloseWrapper
                   onClick={() => {
                     setQuoteMessage(undefined);
@@ -187,32 +188,6 @@ const QuoteReplyWrapper = styled.div`
   gap: 8px;
 `;
 
-const VerticalLine = styled.div`
-  width: 2px;
-  height: 20px;
-  background: #04b17d;
-  border-radius: 100px;
-  margin-right: 10px;
-`;
-
-const QuoteReply = styled.span`
-  height: 40px;
-  max-width: 350px;
-  background: #35343e;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-`;
-
-const Text = styled.p`
-  width: 350px;
-  ${overflowStyle};
-  font-weight: 500;
-  font-size: 13px;
-  color: #7b798f;
-`;
-
 const MessageContainer = styled.div`
   display: flex;
   height: 680px;
@@ -221,6 +196,7 @@ const MessageContainer = styled.div`
   overflow: auto;
   flex-direction: column;
   gap: 30px;
+
   ::-webkit-scrollbar {
     width: 10px;
   }

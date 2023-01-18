@@ -2,18 +2,27 @@ import {RequestHandler} from 'express';
 import {MessageModel} from '../model/messageModel';
 
 export const addMessage: RequestHandler = async (req, res) => {
-  const {from, to, message} = req.body;
+  const {from, to, message, quote} = req.body;
   try {
-    const msg = await MessageModel.create({
+    const lastMessage = await MessageModel.create({
       message: {
         text: message,
       },
       users: [from, ...to],
       sender: from,
+      ...(quote ? {quote} : {}),
     });
     res.json({
-      msg: msg ? 'Message sent successfully' : 'Message sending failed',
+      msg: lastMessage ? 'Message sent successfully' : 'Message sending failed',
       allMessage: await getProjectMessages({from, to}),
+      lastMessage: {
+        from,
+        // TODO: Refactor "to"
+        to: to[0],
+        updatedAt: lastMessage.updatedAt,
+        message: lastMessage.message?.text,
+        ...(quote ? {quote} : {}),
+      },
     });
   } catch (e) {
     console.log(e);
@@ -41,6 +50,7 @@ const getProjectMessages = async ({from, to}: {from: string; to: string[]}) => {
       message: msg.message?.text,
       updatedAt: msg.updatedAt,
       sender: msg?.sender?.toString(),
+      ...(msg.quote ? {quote: msg.quote} : {}),
     };
   });
 };

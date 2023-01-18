@@ -53,6 +53,8 @@ io.on('connection', (socket) => {
   });
   // @ts-ignore
   socket.on('send-msg', (data) => {
+    console.log('data-------');
+    console.log(data);
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit('msg-receive', data);
