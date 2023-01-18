@@ -6,17 +6,18 @@ import {userRouter} from './routers/userRoutes';
 import {messageRouter} from './routers/messagesRoutes';
 const socket = require('socket.io');
 
+// config
 dotenv.config();
+const port = process.env.PORT ?? 8000;
 const app = express();
 
-const port = process.env.PORT ?? 8000;
-
+// mongoose
 mongoose.set('strictQuery', false);
-
 mongoose.connect(process.env.MONGO_URL ?? '').catch((e) => {
   console.log(e.message);
 });
 
+// middleware
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -28,6 +29,7 @@ app.use(
     },
   })
 );
+
 app.use(express.json());
 app.use('/api/auth', userRouter);
 app.use('/api/messages', messageRouter);
@@ -53,8 +55,6 @@ io.on('connection', (socket) => {
   });
   // @ts-ignore
   socket.on('send-msg', (data) => {
-    console.log('data-------');
-    console.log(data);
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit('msg-receive', data);

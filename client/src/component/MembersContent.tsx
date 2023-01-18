@@ -57,9 +57,12 @@ export const MembersContent = () => {
         <StyledInput iconSize={2} />
         <Users>
           {users.map((user) => {
-            const isActive = selectedId === user._id;
             return (
-              <UserItem key={user._id} to={`/members/user/:${user._id}`} $isActive={isActive}>
+              <UserItem
+                key={user._id}
+                to={`/members/user/:${user._id}`}
+                $isActive={selectedId === user._id}
+              >
                 <Avatar src={user.avatarImage} alt="" />
                 <Name>{user.username}</Name>
               </UserItem>
@@ -76,7 +79,7 @@ export const MembersContent = () => {
         </ActiveChannelHeader>
         <ActiveChannelContent>
           <MessageContainer>
-            {allMessages.map((item, index) => {
+            {allMessages.map((item) => {
               const user = item.fromSelf
                 ? currentUser
                 : users.find((user) => {
@@ -85,14 +88,14 @@ export const MembersContent = () => {
 
               return (
                 <MessageItem
-                  key={index + item.message}
-                  username={user?.username ?? ''}
-                  avatarImage={user?.avatarImage ?? ''}
+                  key={item.updatedAt}
                   message={item.message}
                   updatedAt={item.updatedAt}
                   isSelf={item.fromSelf}
                   quote={item.quote}
                   setQuoteMessage={setQuoteMessage}
+                  username={user?.username ?? ''}
+                  avatarImage={user?.avatarImage ?? ''}
                 />
               );
             })}

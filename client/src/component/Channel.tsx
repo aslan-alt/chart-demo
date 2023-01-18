@@ -13,20 +13,19 @@ export const Channel: FC<Props> = ({id}) => {
   const params = useParams<{id: string}>();
   const selectedId = Number(params?.id?.replace(':', '') ?? -1);
   const isActive = selectedId === id;
-  const x = imgUrls;
+
   const imgSize = (() => {
-    if ([3, 4].includes(x.length)) {
+    if ([3, 4].includes(imgUrls.length)) {
       return 20;
     }
-    return x.length >= 5 ? 40 / 3 : 40;
+    return imgUrls.length >= 5 ? 40 / 3 : 40;
   })();
 
   return (
-    // xx
     <Container to={`/chat/chanel/:${id}`} $isActive={isActive}>
       <ChannelImgContainer>
-        {x.map((item, index) => {
-          return <img key={item + index} width={imgSize} height={imgSize} src={item} alt="" />;
+        {imgUrls.map((item) => {
+          return <img key={item} width={imgSize} height={imgSize} src={item} alt="" />;
         })}
       </ChannelImgContainer>
       <ChannelNameAndMessage />

@@ -5,13 +5,12 @@ export const addMessage: RequestHandler = async (req, res) => {
   const {from, to, message, quote} = req.body;
   try {
     const lastMessage = await MessageModel.create({
-      message: {
-        text: message,
-      },
+      message: {text: message},
       users: [from, ...to],
       sender: from,
       ...(quote ? {quote} : {}),
     });
+
     res.json({
       msg: lastMessage ? 'Message sent successfully' : 'Message sending failed',
       allMessage: await getProjectMessages({from, to}),
