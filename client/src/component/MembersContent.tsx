@@ -139,6 +139,7 @@ export const MembersContent = () => {
                     type: 'success',
                   });
                   setMessage('');
+                  setQuoteMessage(undefined);
                 }
               }}
               onInput={(e) => {
